@@ -43,10 +43,8 @@ case class IfStatement(condition: BooleanExpression, thenPart: Statement, elsePa
 
 case class WhileStatement(condition: BooleanExpression, statements: Statement) extends Statement {
   override def execute()(implicit state: State): Unit = {
-    if (condition.value) {
+    while (condition.value)
       statements.execute()
-      execute()
-    }
   }
 }
 
@@ -186,7 +184,7 @@ class ProgramParser(program: String) extends JavaTokenParsers {
       case condition ~ statement => Statement(condition, statement)
     }
     (ifStatement | whileStatement | assignment) ~ ((";" ~> parseStatement) ?) ^^ {
-      case s1 ~ s2 => if (s2.nonEmpty) Statement(s1, s2.get) else s1
+      case s1 ~ s2 => s2.fold(s1)(s2 => Statement(s1, s2))
     }
   }
 
