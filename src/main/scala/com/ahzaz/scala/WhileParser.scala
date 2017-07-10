@@ -71,7 +71,7 @@ case class False() extends BooleanExpression {
 case class BExp(op1: BooleanExpression, op2: BooleanExpression, operator: String) extends BooleanExpression {
   override def value(implicit state: State): Boolean = operator match {
     case "and" => op1.value && op2.value
-    case "or" => op1.value && op2.value
+    case "or" => op1.value || op2.value
   }
 }
 
